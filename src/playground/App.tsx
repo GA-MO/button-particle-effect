@@ -13,12 +13,13 @@ function play(el: HTMLElement, outro: Outro, e?: MouseEvent, color?: string) {
 
 export function App() {
   const cartRef = useRef<HTMLSpanElement>(null)
+  const paneRef = useRef<HTMLDivElement>(null)
   const [cartCount, setCartCount] = useState(2)
 
-  useEffect(mountPane, [])
+  useEffect(() => (paneRef.current ? mountPane(paneRef.current) : undefined), [])
 
   return (
-    <div className='mx-auto max-w-6xl px-5 pb-24 sm:px-8'>
+    <div className='mx-auto max-w-7xl px-5 pb-24 sm:px-8'>
       <header className='flex items-center justify-between gap-4 py-8 sm:py-10'>
         <div>
           <h1 className='font-display text-5xl leading-none tracking-tight sm:text-6xl'>Dust</h1>
@@ -40,65 +41,70 @@ export function App() {
         </span>
       </header>
 
-      <div className='mb-6 flex flex-wrap items-center gap-3'>
-        <button
-          type='button'
-          className='cursor-pointer rounded-full border border-card-line bg-card px-5 py-2.5 text-sm font-medium backdrop-blur hover:bg-white/60 focus-visible:outline-2 focus-visible:outline-offset-2'
-          onClick={() => document.querySelectorAll<HTMLElement>('[data-demo]').forEach((b) => b.click())}
-        >
-          Play all at once
-        </button>
-        <span className='text-xs text-ink-soft'>Tune shared physics in the panel. Direction “from pointer” follows where you click.</span>
-      </div>
+      <div className='lg:grid lg:grid-cols-[minmax(0,1fr)_17rem] lg:items-start lg:gap-8'>
+        <aside ref={paneRef} className='mb-5 lg:sticky lg:top-6 lg:order-last lg:mb-0' />
+        <div>
+          <div className='mb-6 flex flex-wrap items-center gap-3'>
+            <button
+              type='button'
+              className='cursor-pointer rounded-full border border-card-line bg-card px-5 py-2.5 text-sm font-medium backdrop-blur hover:bg-white/60 focus-visible:outline-2 focus-visible:outline-offset-2'
+              onClick={() => document.querySelectorAll<HTMLElement>('[data-demo]').forEach((b) => b.click())}
+            >
+              Play all at once
+            </button>
+            <span className='text-xs text-ink-soft'>Tune shared physics in the panel. Direction “from pointer” follows where you click.</span>
+          </div>
 
-      <main className='grid gap-5 md:grid-cols-2 xl:grid-cols-3'>
-        <Card n='01' name='fade' when='Default feedback. Dust drifts off, the button fades back.'>
-          <FadeDemo />
-        </Card>
-        <Card n='02' name='reassemble' when='Undo, reset, toggle. Dust hangs, then springs home.'>
-          <button
-            type='button'
-            data-demo='reassemble'
-            className={`${BUTTON} h-11 rounded-full bg-plum px-6 text-sm`}
-            onClick={(e) => play(e.currentTarget, { kind: 'reassemble' }, e)}
-          >
-            <UndoIcon /> Undo
-          </button>
-        </Card>
-        <Card n='03' name='fly-to' when='Add to cart. Dust streams into the cart, which bounces.'>
-          <button
-            type='button'
-            data-demo='fly-to'
-            className={`${BUTTON} h-14 rounded-lg bg-teal px-8`}
-            onClick={(e) => {
-              const target = cartRef.current
-              if (!target) return
-              void play(e.currentTarget, { kind: 'fly-to', target }, e).then(() =>
-                setCartCount((c) => c + 1)
-              )
-            }}
-          >
-            Add to bag
-          </button>
-        </Card>
-        <Card n='04' name='morph' when='Success state. Breaks apart, rebuilds as the new label and color.'>
-          <MorphDemo />
-        </Card>
-        <Card n='05' name='implode' when='Submit, send. Dust is pulled to the center, the button pops out.'>
-          <button
-            type='button'
-            data-demo='implode'
-            aria-label='Send'
-            className={`${BUTTON} size-16 rounded-full bg-tangerine`}
-            onClick={(e) => play(e.currentTarget, { kind: 'implode' }, e)}
-          >
-            <SendIcon />
-          </button>
-        </Card>
-        <Card n='06' name='vanish' when='Delete, dismiss. Gone for good; the caller removes the element.'>
-          <VanishDemo />
-        </Card>
-      </main>
+          <main className='grid gap-5 md:grid-cols-2'>
+            <Card n='01' name='fade' when='Default feedback. Dust drifts off, the button fades back.'>
+              <FadeDemo />
+            </Card>
+            <Card n='02' name='reassemble' when='Undo, reset, toggle. Dust hangs, then springs home.'>
+              <button
+                type='button'
+                data-demo='reassemble'
+                className={`${BUTTON} h-11 rounded-full bg-plum px-6 text-sm`}
+                onClick={(e) => play(e.currentTarget, { kind: 'reassemble' }, e)}
+              >
+                <UndoIcon /> Undo
+              </button>
+            </Card>
+            <Card n='03' name='fly-to' when='Add to cart. Dust streams into the cart, which bounces.'>
+              <button
+                type='button'
+                data-demo='fly-to'
+                className={`${BUTTON} h-14 rounded-lg bg-teal px-8`}
+                onClick={(e) => {
+                  const target = cartRef.current
+                  if (!target) return
+                  void play(e.currentTarget, { kind: 'fly-to', target }, e).then(() =>
+                    setCartCount((c) => c + 1)
+                  )
+                }}
+              >
+                Add to bag
+              </button>
+            </Card>
+            <Card n='04' name='morph' when='Success state. Breaks apart, rebuilds as the new label and color.'>
+              <MorphDemo />
+            </Card>
+            <Card n='05' name='implode' when='Submit, send. Dust is pulled to the center, the button pops out.'>
+              <button
+                type='button'
+                data-demo='implode'
+                aria-label='Send'
+                className={`${BUTTON} size-16 rounded-full bg-tangerine`}
+                onClick={(e) => play(e.currentTarget, { kind: 'implode' }, e)}
+              >
+                <SendIcon />
+              </button>
+            </Card>
+            <Card n='06' name='vanish' when='Delete, dismiss. Gone for good; the caller removes the element.'>
+              <VanishDemo />
+            </Card>
+          </main>
+        </div>
+      </div>
     </div>
   )
 }

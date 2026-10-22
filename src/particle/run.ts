@@ -2,17 +2,17 @@ import { STRIDE } from './renderer'
 import type { BurstOptions, Direction, Outro, Physics } from './types'
 
 export const DEFAULTS: Physics = {
-  count: 900,
-  direction: 'left',
-  force: 150,
-  curl: 90,
+  count: 3000,
+  direction: 'pointer',
+  force: 255,
+  curl: 50,
   drag: 2.6,
   gravity: 4,
-  size: 9,
-  blur: 0.3,
-  life: 1600,
-  dissolve: 900,
-  return: 900
+  size: 2,
+  blur: 0.6,
+  life: 2550,
+  dissolve: 300,
+  return: 1500
 }
 
 const enum Mode {
@@ -166,7 +166,7 @@ export function createRun(el: HTMLElement, opts: BurstOptions, onLeave: () => vo
     style.borderBottomLeftRadius
   ].map((v) => radiusPx(v, box.w, box.h))
 
-  const n = Math.round(Math.min(6000, Math.max(80, (p.count * box.w * box.h) / (200 * 56))))
+  const n = Math.round(Math.min(12000, Math.max(80, (p.count * box.w * box.h) / (200 * 56))))
   const home = new Float32Array(n * 2)
   const pos = new Float32Array(n * 2)
   const vel = new Float32Array(n * 2)

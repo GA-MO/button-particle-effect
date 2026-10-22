@@ -29,7 +29,3 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
-
-.tp-dfwv {
-  z-index: 50;
-}

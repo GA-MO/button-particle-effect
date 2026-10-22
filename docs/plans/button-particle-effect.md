@@ -47,14 +47,17 @@ micro-interaction ตอน "เพิ่มลงตะกร้า" ที่�
 
 ## สถานะ (updated 2026-10-22)
 ทำแล้ว: phase 1+2 และ playground ของ phase 3
-- stack ใหม่: Vite 8.3, React 19.3, TypeScript 7.0 strict, Tailwind 4.3 (tokens ใน `@theme`), Tweakpane 4 (เบากว่า leva และไม่ผูก React), Dockerfile ใช้ bun
+- stack ใหม่: Vite 8.3, React 19.3, TypeScript 7.0 strict, Tailwind 4.3 (tokens ใน `@theme`), Tweakpane 4 (เบากว่า leva และไม่ผูก React), ลบ Dockerfile
 - `src/particle/`: `burst(el, options)` คืน Promise, `attach(el, options)` คืน cleanup, outro เป็น discriminated union 6 แบบ (fade, reassemble, fly-to, morph, implode, vanish)
 - overlay canvas เดียว, ฟิสิกส์ CPU (impulse + curl noise + drag + gravity), ปุ่มหาย/โผล่ด้วย `mask-image` ตาม front ไม่ขยับ box
+- ค่าเริ่มต้นตามที่ผู้ใช้จูน: count 3000, from pointer, force 255, curl 50, drag 2.6, gravity 4, size 2, blur 0.6, life 2550, dissolve 300, return 1500 (ใช้ทั้ง lib และ Reset ของแผง)
+- แผง Tweakpane อยู่ใน layout: จอ ≥1024 เป็น sidebar sticky ขวา, จอเล็กกว่าอยู่เหนือการ์ดและพับได้ ไม่ลอยทับ content
 - รองรับ กดซ้ำ, หลายปุ่มพร้อมกัน, scroll/resize, reduced motion, context lost, คีย์บอร์ด (ทดสอบใน Chrome แล้ว)
 ค้าง: -
 ค้นพบ:
 - `reassemble` ที่เคยอยู่ใน "ไม่ทำใน v1" ถูกขอเพิ่มและทำแล้วในรูป outro
 - ใช้ `mask-image` แทน `clip-path` เพราะทำขอบนุ่มได้ และทิศ "จากจุดที่กด" ต้องเป็นวงกลมกลับด้าน ซึ่ง clip-path ทำไม่ได้
 - implode/fly-to ใช้ WAAPI `transform: scale` ตอนปุ่มเด้งกลับ ทับ transform ของปุ่มชั่วคราว
-- 5 ปุ่ม + 4 แถวพร้อมกันที่ DPR 2 ได้ 60fps (p95 17.7ms) บน Mac เครื่องนี้ ยังไม่ได้วัดบนมือถือจริง
+- count 6000 (max ของ slider) เล่น 5 ปุ่ม + 4 แถวพร้อมกัน วาด 64,244 จุดต่อเฟรมที่ DPR 2 ได้ 60fps (p95 17.3ms ไม่มี long frame) บน Mac เครื่องนี้ ยังไม่ได้วัดบนมือถือจริง
+- เพดาน particle ต่อ element เพิ่มเป็น 12000 เพราะ count 6000 บนปุ่มที่ใหญ่กว่า 200x56 จะชนเพดานเดิม
 ถัดไป: Vite library mode เพื่อแยกเป็น npm lib, วัดบนมือถือจริง
