@@ -4,14 +4,14 @@ import type { BurstOptions, Direction, Outro, Physics } from './types'
 export const DEFAULTS: Physics = {
   count: 900,
   direction: 'left',
-  force: 170,
-  curl: 240,
-  drag: 2.2,
-  gravity: 6,
-  size: 7,
-  blur: 0.35,
-  life: 1400,
-  dissolve: 650,
+  force: 150,
+  curl: 90,
+  drag: 2.6,
+  gravity: 4,
+  size: 9,
+  blur: 0.3,
+  life: 1600,
+  dissolve: 900,
   return: 900
 }
 
@@ -197,9 +197,9 @@ export function createRun(el: HTMLElement, opts: BurstOptions, onLeave: () => vo
     key[i] = Math.min(1, frontKey(p.direction, x, y, box, origin) + Math.random() * 0.05)
     const z = Math.random()
     const out = Math.random() < p.blur
-    size[i] = p.size * (0.3 + 0.7 * z * z) * (out ? 1.35 : 1)
+    size[i] = p.size * (0.35 + 0.65 * z * z) * (out ? 1.35 : 1)
     soft[i] = out ? 0.55 + Math.random() * 0.45 : 0.12 + Math.random() * 0.15
-    alpha[i] = (out ? 0.35 : 0.6) + Math.random() * 0.4
+    alpha[i] = (out ? 0.45 : 0.7) + Math.random() * 0.3
     lifespan[i] = p.life * (0.55 + Math.random() * 0.6)
   }
 
@@ -351,7 +351,7 @@ export function createRun(el: HTMLElement, opts: BurstOptions, onLeave: () => vo
           ;[dx, dy] = dirVec[p.direction]
         }
         const push = p.force * (0.25 + 0.75 * Math.random() ** 0.6)
-        const spread = p.force * 0.55 * (Math.random() + Math.random() - 1)
+        const spread = p.force * 0.9 * (Math.random() + Math.random() - 1)
         vel[ix] = dx * push - dy * spread
         vel[iy] = dy * push + dx * spread
       }
@@ -362,7 +362,7 @@ export function createRun(el: HTMLElement, opts: BurstOptions, onLeave: () => vo
       const homingAt = homingStart + key[i]! * stagger
       if (homing && t >= homingAt) mode[i] = Mode.Homing
 
-      curl(x / 90 + seed, y / 90, time, tmp)
+      curl(x / 60 + seed, y / 60, time, tmp)
       let ax = tmp[0] * p.curl
       let ay = tmp[1] * p.curl + p.gravity
 

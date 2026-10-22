@@ -6,9 +6,9 @@ import { mountPane, physics } from './tuning'
 const BUTTON =
   'inline-flex cursor-pointer items-center justify-center gap-2 font-medium text-white transition-[filter] hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink'
 
-function play(el: HTMLElement, outro: Outro, e?: MouseEvent) {
+function play(el: HTMLElement, outro: Outro, e?: MouseEvent, color?: string) {
   const origin = e && e.detail > 0 ? { x: e.clientX, y: e.clientY } : undefined
-  return burst(el, { ...physics, outro, ...(origin && { origin }) })
+  return burst(el, { ...physics, outro, ...(origin && { origin }), ...(color && { color }) })
 }
 
 export function App() {
@@ -58,7 +58,7 @@ export function App() {
         <Card n='02' name='reassemble' when='Undo, reset, toggle. Dust hangs, then springs home.'>
           <button
             type='button'
-            data-demo
+            data-demo='reassemble'
             className={`${BUTTON} h-11 rounded-full bg-plum px-6 text-sm`}
             onClick={(e) => play(e.currentTarget, { kind: 'reassemble' }, e)}
           >
@@ -68,7 +68,7 @@ export function App() {
         <Card n='03' name='fly-to' when='Add to cart. Dust streams into the cart, which bounces.'>
           <button
             type='button'
-            data-demo
+            data-demo='fly-to'
             className={`${BUTTON} h-14 rounded-lg bg-teal px-8`}
             onClick={(e) => {
               const target = cartRef.current
@@ -87,7 +87,7 @@ export function App() {
         <Card n='05' name='implode' when='Submit, send. Dust is pulled to the center, the button pops out.'>
           <button
             type='button'
-            data-demo
+            data-demo='implode'
             aria-label='Send'
             className={`${BUTTON} size-16 rounded-full bg-tangerine`}
             onClick={(e) => play(e.currentTarget, { kind: 'implode' }, e)}
@@ -124,7 +124,7 @@ function FadeDemo() {
     return attach(el, () => ({ ...physics, outro: { kind: 'fade' } }))
   }, [])
   return (
-    <button ref={ref} type='button' data-demo className={`${BUTTON} h-16 rounded-2xl bg-brick px-10 text-lg`}>
+    <button ref={ref} type='button' data-demo='fade' className={`${BUTTON} h-16 rounded-2xl bg-brick px-10 text-lg`}>
       Add to cart
     </button>
   )
@@ -135,7 +135,7 @@ function MorphDemo() {
   return (
     <button
       type='button'
-      data-demo
+      data-demo='morph'
       aria-live='polite'
       className={`${BUTTON} h-14 min-w-44 rounded-2xl px-7 ${done ? 'bg-success' : 'bg-indigo'}`}
       onClick={(e) =>
@@ -162,13 +162,13 @@ function VanishDemo() {
             {item}
             <button
               type='button'
-              data-demo
+              data-demo='vanish'
               aria-label={`Delete ${item}`}
               className='grid size-8 cursor-pointer place-items-center rounded-lg text-ink-soft hover:bg-ink/5 hover:text-brick focus-visible:outline-2 focus-visible:outline-ink'
               onClick={(e) => {
                 const row = e.currentTarget.closest('li')
                 if (!row) return
-                void play(row, { kind: 'vanish' }, e).then(() =>
+                void play(row, { kind: 'vanish' }, e, '#b4463c').then(() =>
                   setItems((list) => list.filter((i) => i !== item))
                 )
               }}
