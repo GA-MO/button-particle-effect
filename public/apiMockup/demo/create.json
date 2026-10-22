@@ -1,0 +1,8 @@
+{
+  "code": 200,
+  "message": "Success",
+  "data": {
+    "id": 1,
+    "name": "John Doe"
+  }
+}

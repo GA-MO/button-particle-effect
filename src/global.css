@@ -1,0 +1,12 @@
+@import "tailwindcss";
+@import '@mantine/core/styles.layer.css';
+
+html,
+body {
+  font-size: 16px;
+}
+
+@theme static {
+  --color-primary: var(--mantine-color-primary-6);
+  --color-secondary: var(--mantine-color-secondary-6);
+}
