@@ -60,4 +60,6 @@ micro-interaction ตอน "เพิ่มลงตะกร้า" ที่�
 - implode/fly-to ใช้ WAAPI `transform: scale` ตอนปุ่มเด้งกลับ ทับ transform ของปุ่มชั่วคราว
 - count 6000 (max ของ slider) เล่น 5 ปุ่ม + 4 แถวพร้อมกัน วาด 64,244 จุดต่อเฟรมที่ DPR 2 ได้ 60fps (p95 17.3ms ไม่มี long frame) บน Mac เครื่องนี้ ยังไม่ได้วัดบนมือถือจริง
 - เพดาน particle ต่อ element เพิ่มเป็น 12000 เพราะ count 6000 บนปุ่มที่ใหญ่กว่า 200x56 จะชนเพดานเดิม
-ถัดไป: Vite library mode เพื่อแยกเป็น npm lib, วัดบนมือถือจริง
+- public repo GA-MO/button-particle-effect + GitHub Pages (workflow bun + deploy-pages), README อังกฤษ มี hero GIF ภาพแต่ละ outro และตัวอย่าง React ที่ tsc คอมไพล์จริงจาก examples/react (sync ด้วย `bun run readme`)
+- `src/particle/react.ts` มี `useDust` (React เป็น peer) core ยังไม่ import React, core 11.4 kB min / 5.0 kB gzip
+ถัดไป: Vite library mode เพื่อแยกเป็น npm lib, วัดบนมือถือจริง, ทดสอบ Safari/Firefox

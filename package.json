@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "build:pages": "tsc --noEmit && vite build --mode pages",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "readme": "bun scripts/sync-readme.ts"
   },
   "dependencies": {
     "react": "^19.3.1",
