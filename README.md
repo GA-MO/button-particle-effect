@@ -1,96 +1,40 @@
-# React + TypeScript + Vite
+# button-particle-effect
 
-## 📝 Documentation
+A button dissolves into soft dust on one shared WebGL2 canvas, then comes back in one of six ways. The button's box never moves: it hides behind a CSS mask while the dust is drawn on a fixed overlay.
 
-- [Naming Conventions](./docs/naming-conventions.md)
-- [React TypeScript Best Practices](./docs/react-typescript-best-practices.md)
-- [API Integration](./docs/api-integration.md)
+The effect lives in `src/particle/`. It has no dependencies and does not import React. The playground in `src/playground/` uses React and Tweakpane.
 
-## 📑 Table of Contents
+## Run
 
-- [Libraries](#-libraries)
-- [Requirements](#-requirements)
-- [VS Code Extensions](#-vs-code-extensions)
-- [Installation](#-installation)
-- [Run Dev Server](#-run-dev-server)
-- [Run Test](#-run-test)
-- [Run Lint](#-run-lint)
-- [Run Build](#-run-build)
-- [Docker Build](#-docker-build)
-- [Documentation](#-documentation)
-
-### 📚 Libraries
-
-- [Mantine UI](https://mantine.dev/)
-  - [Hooks](https://mantine.dev/hooks/package/)
-  - [Components](https://mantine.dev/core/package/)
-  - [Forms](https://mantine.dev/form/package/)
-  - [Notifications](https://mantine.dev/x/notifications/)
-  - [Modals](https://mantine.dev/x/modals/)
-  - [Dates](https://mantine.dev/dates/getting-started/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [React Query](https://tanstack.com/query/latest)
-- [Zustand](https://zustand-demo.pmnd.rs/)
-- [React Router](https://reactrouter.com/)
-- [Axios](https://axios-http.com/)
-- [Typescript Cookie](https://github.com/js-cookie/js.cookie)
-- [Vitest](https://vitest.dev/)
-
-### ⚙️ Requirements
-
-- [Bun](https://bun.sh/)
-- [Docker](https://www.docker.com/)
-
-### 📦 VS Code Extensions
-
-- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
-- [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-- [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
-
-### 🚀 Installation
-
-```sh
+```bash
 bun install
-```
-
-### 💻 Run Dev Server
-
-Run the development server with hot reload.
-
-```sh
 bun run dev
-```
-
-### 🧪 Run Test
-
-```sh
-bun run test
-bun run test:watch
-bun run test:coverage
-```
-
-### 🔍 Run Lint
-
-```sh
-bun run lint
-```
-
-### 🏗️ Run Build
-
-```sh
 bun run build
-bun run build:dev
-bun run build:staging
-bun run build:prod
 ```
 
-### 🐳 Docker Build
+## API
 
-```sh
+```ts
+import { attach, burst } from './src/particle'
 
-## BUILD_ENV
-#  - uat,prd
+// Plays once. Resolves when the effect ends; played is false when it was skipped.
+const { played } = await burst(button, { outro: { kind: 'reassemble' }, direction: 'left' })
 
-docker build -t app-name --build-arg BUILD_ENV=uat .
-
+// Plays on every click or keyboard press. Returns a cleanup.
+const detach = attach(button, { outro: { kind: 'fade' } })
 ```
+
+`outro` picks how the element returns:
+
+| kind | use it for | behavior |
+| --- | --- | --- |
+| `fade` | general feedback | Dust drifts off. The element fades back in. |
+| `reassemble` | undo, reset, toggle | Dust hangs, then springs back into place. |
+| `fly-to` (`target`) | add to cart | Dust streams into `target`, which bounces. The element pops back. |
+| `morph` (`swap`) | success state | `swap(el)` runs while the element is hidden. Dust returns in the new color. |
+| `implode` | submit, send | Dust is pulled to the center. The element pops out. |
+| `vanish` | delete, dismiss | Dust drifts off. The element stays hidden; remove it yourself. |
+
+Physics options: `count`, `direction` (`left`, `right`, `up`, `down`, `pointer`), `force`, `curl`, `drag`, `gravity`, `size`, `blur`, `life`, `dissolve`, `return`. `origin` sets the pointer position, and `color` overrides the color read from the element.
+
+Calling `burst` again on an element that is still playing returns the running promise. With `prefers-reduced-motion: reduce`, without WebGL2, or after the context is lost, the effect is skipped: `morph` still runs `swap`, and `vanish` still hides the element.

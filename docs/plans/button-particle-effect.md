@@ -46,7 +46,15 @@ micro-interaction ตอน "เพิ่มลงตะกร้า" ที่�
 3. preset + playground สวย พร้อมแยกเป็น npm lib (Vite library mode) ถ้าอยากไปต่อ
 
 ## สถานะ (updated 2026-10-22)
-ทำแล้ว: สร้าง project จาก template
+ทำแล้ว: phase 1+2 และ playground ของ phase 3
+- stack ใหม่: Vite 8.3, React 19.3, TypeScript 7.0 strict, Tailwind 4.3 (tokens ใน `@theme`), Tweakpane 4 (เบากว่า leva และไม่ผูก React), Dockerfile ใช้ bun
+- `src/particle/`: `burst(el, options)` คืน Promise, `attach(el, options)` คืน cleanup, outro เป็น discriminated union 6 แบบ (fade, reassemble, fly-to, morph, implode, vanish)
+- overlay canvas เดียว, ฟิสิกส์ CPU (impulse + curl noise + drag + gravity), ปุ่มหาย/โผล่ด้วย `mask-image` ตาม front ไม่ขยับ box
+- รองรับ กดซ้ำ, หลายปุ่มพร้อมกัน, scroll/resize, reduced motion, context lost, คีย์บอร์ด (ทดสอบใน Chrome แล้ว)
 ค้าง: -
-ค้นพบ: -
-ถัดไป: /go phase 1 ตาม docs/plans/button-particle-effect.md
+ค้นพบ:
+- `reassemble` ที่เคยอยู่ใน "ไม่ทำใน v1" ถูกขอเพิ่มและทำแล้วในรูป outro
+- ใช้ `mask-image` แทน `clip-path` เพราะทำขอบนุ่มได้ และทิศ "จากจุดที่กด" ต้องเป็นวงกลมกลับด้าน ซึ่ง clip-path ทำไม่ได้
+- implode/fly-to ใช้ WAAPI `transform: scale` ตอนปุ่มเด้งกลับ ทับ transform ของปุ่มชั่วคราว
+- 5 ปุ่ม + 4 แถวพร้อมกันที่ DPR 2 ได้ 60fps (p95 17.7ms) บน Mac เครื่องนี้ ยังไม่ได้วัดบนมือถือจริง
+ถัดไป: Vite library mode เพื่อแยกเป็น npm lib, วัดบนมือถือจริง

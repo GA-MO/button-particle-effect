@@ -216,7 +216,7 @@ export function createRun(el: HTMLElement, opts: BurstOptions, onLeave: () => vo
 
   let t = 0
   let finished = false
-  let swapped = false
+  let swapCalled = false
   let revealStarted = false
   let revealDone = false
   let targetBounced = false
@@ -252,11 +252,11 @@ export function createRun(el: HTMLElement, opts: BurstOptions, onLeave: () => vo
   }
 
   function startSwap() {
-    if (outro.kind !== 'morph' || swapped) return
-    swapped = true
+    if (outro.kind !== 'morph' || swapCalled) return
+    swapCalled = true
     const oldW = box.w
     const oldH = box.h
-    Promise.resolve(outro.swap(el)).then(() => {
+    const onSwapped = () => {
       if (finished) return
       box = boxOf(el)
       const sx = box.w / oldW
@@ -267,7 +267,13 @@ export function createRun(el: HTMLElement, opts: BurstOptions, onLeave: () => vo
       }
       nextColor = elementColor(el)
       homingStart = Math.max(t, p.dissolve + p.life * 0.25)
-    })
+    }
+    Promise.resolve()
+      .then(() => outro.swap(el))
+      .then(onSwapped, (error: unknown) => {
+        reportError(error)
+        onSwapped()
+      })
   }
 
   function reveal(kind: 'fade' | 'pop') {
@@ -448,8 +454,8 @@ export function createRun(el: HTMLElement, opts: BurstOptions, onLeave: () => vo
   }
 
   function finishNow() {
-    if (outro.kind === 'morph' && !swapped) {
-      swapped = true
+    if (outro.kind === 'morph' && !swapCalled) {
+      swapCalled = true
       void outro.swap(el)
     }
     finish(false)
