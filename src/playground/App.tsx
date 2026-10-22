@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react'
 import { flushSync } from 'react-dom'
-import { attach, burst, type Outro } from '../particle'
+import { burst, type Outro } from '../particle'
+import { useDust } from '../particle/react'
 import { mountPane, physics } from './tuning'
 
 const BUTTON =
@@ -123,12 +124,7 @@ function Card({ n, name, when, children }: { n: string; name: string; when: stri
 }
 
 function FadeDemo() {
-  const ref = useRef<HTMLButtonElement>(null)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    return attach(el, () => ({ ...physics, outro: { kind: 'fade' } }))
-  }, [])
+  const ref = useDust<HTMLButtonElement>(() => ({ ...physics, outro: { kind: 'fade' } }))
   return (
     <button ref={ref} type='button' data-demo='fade' className={`${BUTTON} h-16 rounded-2xl bg-brick px-10 text-lg`}>
       Add to cart
