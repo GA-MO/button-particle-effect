@@ -27,14 +27,27 @@
 
 Pick one with `outro`. It is a single discriminated union, so each kind carries only the fields it needs.
 
-| | `outro` | Use it for | What happens |
-| --- | --- | --- | --- |
-| <img src="docs/media/outro-fade.jpg" width="220" alt="fade"> | `{ kind: 'fade' }` | General feedback | The dust drifts away, then the button fades back in. |
-| <img src="docs/media/outro-reassemble.jpg" width="220" alt="reassemble"> | `{ kind: 'reassemble' }` | Undo, reset, toggle | The dust hangs in the air, then springs back into the button. |
-| <img src="docs/media/outro-fly-to.jpg" width="220" alt="fly-to"> | `{ kind: 'fly-to', target }` | Add to cart | The dust streams into `target`, which bounces. Then the button pops back. |
-| <img src="docs/media/outro-morph.jpg" width="220" alt="morph"> | `{ kind: 'morph', swap }` | Success states | `swap(el)` runs while the button is hidden. The dust returns in the new color. |
-| <img src="docs/media/outro-implode.jpg" width="220" alt="implode"> | `{ kind: 'implode' }` | Submit, send | The dust is pulled to the center, and the button pops out. |
-| <img src="docs/media/outro-vanish.jpg" width="220" alt="vanish"> | `{ kind: 'vanish' }` | Delete, dismiss | The dust drifts away and the element stays hidden. You remove it. |
+<table>
+<tr>
+<td align="center" width="33%"><img src="docs/media/outro-fade.jpg" alt="fade outro, mid-effect" width="280"><br><b><code>fade</code></b><br><sub>General feedback</sub></td>
+<td align="center" width="33%"><img src="docs/media/outro-reassemble.jpg" alt="reassemble outro, mid-effect" width="280"><br><b><code>reassemble</code></b><br><sub>Undo, reset, toggle</sub></td>
+<td align="center" width="33%"><img src="docs/media/outro-fly-to.jpg" alt="fly-to outro, mid-effect" width="280"><br><b><code>fly-to</code></b><br><sub>Add to cart</sub></td>
+</tr>
+<tr>
+<td align="center" width="33%"><img src="docs/media/outro-morph.jpg" alt="morph outro, mid-effect" width="280"><br><b><code>morph</code></b><br><sub>Success states</sub></td>
+<td align="center" width="33%"><img src="docs/media/outro-implode.jpg" alt="implode outro, mid-effect" width="280"><br><b><code>implode</code></b><br><sub>Submit, send</sub></td>
+<td align="center" width="33%"><img src="docs/media/outro-vanish.jpg" alt="vanish outro, mid-effect" width="280"><br><b><code>vanish</code></b><br><sub>Delete, dismiss</sub></td>
+</tr>
+</table>
+
+| `outro` | What happens |
+| --- | --- |
+| `{ kind: 'fade' }` | The dust drifts away, then the button fades back in. |
+| `{ kind: 'reassemble' }` | The dust hangs in the air, then springs back into the button. |
+| `{ kind: 'fly-to', target }` | The dust streams into `target`, which bounces. Then the button pops back. |
+| `{ kind: 'morph', swap }` | `swap(el)` runs while the button is hidden. The dust returns in the new color. |
+| `{ kind: 'implode' }` | The dust is pulled to the center, and the button pops out. |
+| `{ kind: 'vanish' }` | The dust drifts away and the element stays hidden. You remove it. |
 
 ## Quick start
 
