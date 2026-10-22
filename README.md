@@ -37,4 +37,4 @@ const detach = attach(button, { outro: { kind: 'fade' } })
 
 Physics options: `count`, `direction` (`left`, `right`, `up`, `down`, `pointer`), `force`, `curl`, `drag`, `gravity`, `size`, `blur`, `life`, `dissolve`, `return`. `origin` sets the pointer position, and `color` overrides the color read from the element.
 
-Calling `burst` again on an element that is still playing returns the running promise. With `prefers-reduced-motion: reduce`, without WebGL2, or after the context is lost, the effect is skipped: `morph` still runs `swap`, and `vanish` still hides the element.
+Calling `burst` again on an element that is still playing returns the running promise. With `prefers-reduced-motion: reduce`, without WebGL2, or after the context is lost, the effect is skipped: `morph` still runs `swap`, and `vanish` still hides the element. A `swap` promise that never settles keeps the dust floating, so make sure it settles.

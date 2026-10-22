@@ -64,7 +64,11 @@ export function getRenderer(): Renderer | null {
   }
   const gl = canvas.getContext('webgl2', { premultipliedAlpha: true, antialias: false })
   if (!gl || gl.isContextLost()) return null
-  renderer = createRenderer(gl, canvas)
+  try {
+    renderer = createRenderer(gl, canvas)
+  } catch (error) {
+    reportError(error)
+  }
   return renderer
 }
 

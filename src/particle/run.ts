@@ -46,6 +46,7 @@ export interface Run {
 const SOFT_EDGE = 0.08
 
 export function parseColor(css: string): Rgb | null {
+  if (!CSS.supports('color', css)) return null
   const ctx = colorCtx()
   ctx.fillStyle = '#000'
   ctx.fillStyle = css
@@ -254,8 +255,8 @@ export function createRun(el: HTMLElement, opts: BurstOptions, onLeave: () => vo
   function startSwap() {
     if (outro.kind !== 'morph' || swapCalled) return
     swapCalled = true
-    const oldW = box.w
-    const oldH = box.h
+    const oldW = box.w || 1
+    const oldH = box.h || 1
     const onSwapped = () => {
       if (finished) return
       box = boxOf(el)
@@ -270,6 +271,7 @@ export function createRun(el: HTMLElement, opts: BurstOptions, onLeave: () => vo
     }
     Promise.resolve()
       .then(() => outro.swap(el))
+      .then(() => new Promise((r) => requestAnimationFrame(r)))
       .then(onSwapped, (error: unknown) => {
         reportError(error)
         onSwapped()
@@ -323,7 +325,7 @@ export function createRun(el: HTMLElement, opts: BurstOptions, onLeave: () => vo
     if (el.isConnected) box = boxOf(el)
     t += dtMs
     const dt = dtMs / 1000
-    const front = Math.min(1, t / p.dissolve)
+    const front = Math.min(1, t / Math.max(p.dissolve, 1))
     const easedFront = front * front * (3 - 2 * front)
 
     if (t <= p.dissolve) setMask(maskCss(p.direction, easedFront, false, box, origin))
@@ -456,7 +458,9 @@ export function createRun(el: HTMLElement, opts: BurstOptions, onLeave: () => vo
   function finishNow() {
     if (outro.kind === 'morph' && !swapCalled) {
       swapCalled = true
-      void outro.swap(el)
+      Promise.resolve()
+        .then(() => outro.swap(el))
+        .catch(reportError)
     }
     finish(false)
   }

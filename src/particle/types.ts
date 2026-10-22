@@ -4,6 +4,7 @@ export type Outro =
   | { kind: 'fade' }
   | { kind: 'reassemble' }
   | { kind: 'fly-to'; target: Element }
+  /** swap must update the DOM by the time it returns or resolves, e.g. React flushSync */
   | { kind: 'morph'; swap: (el: HTMLElement) => void | Promise<void> }
   | { kind: 'implode' }
   | { kind: 'vanish' }

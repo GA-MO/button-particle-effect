@@ -6,6 +6,7 @@ export type { BurstOptions, BurstResult, Direction, Outro, OutroKind, Physics } 
 export { DEFAULTS }
 
 const active = new Map<HTMLElement, { run: Run; result: Promise<BurstResult> }>()
+const skipping = new Map<HTMLElement, Promise<BurstResult>>()
 let frame = 0
 let last = 0
 let buffer = new Float32Array(0)
@@ -21,11 +22,16 @@ const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').match
  * Calling again while a burst is playing on the same element returns the running promise.
  */
 export function burst(el: HTMLElement, options: BurstOptions = {}): Promise<BurstResult> {
-  const playing = active.get(el)
-  if (playing) return playing.result
+  const playing = active.get(el)?.result ?? skipping.get(el)
+  if (playing) return playing
 
-  const renderer = reducedMotion() ? null : getRenderer()
-  if (!renderer) return skip(el, options)
+  const { width, height } = el.getBoundingClientRect()
+  const renderer = reducedMotion() || width * height === 0 ? null : getRenderer()
+  if (!renderer) {
+    const result = skip(el, options).finally(() => skipping.delete(el))
+    skipping.set(el, result)
+    return result
+  }
 
   const run = createRun(el, options, () => active.delete(el))
   const result = run.done.then((played) => ({ el, played }))
@@ -39,7 +45,13 @@ export function burst(el: HTMLElement, options: BurstOptions = {}): Promise<Burs
 
 async function skip(el: HTMLElement, options: BurstOptions): Promise<BurstResult> {
   const outro = options.outro
-  if (outro?.kind === 'morph') await outro.swap(el)
+  if (outro?.kind === 'morph') {
+    try {
+      await outro.swap(el)
+    } catch (error) {
+      reportError(error)
+    }
+  }
   if (outro?.kind === 'vanish') {
     el.style.setProperty('mask-image', 'linear-gradient(transparent, transparent)')
     el.style.setProperty('-webkit-mask-image', 'linear-gradient(transparent, transparent)')
@@ -48,7 +60,7 @@ async function skip(el: HTMLElement, options: BurstOptions): Promise<BurstResult
 }
 
 function tick(now: number) {
-  const dt = Math.min(now - last, 50)
+  const dt = Math.max(0, Math.min(now - last, 50))
   last = now
   const renderer = getRenderer()
   let total = 0
