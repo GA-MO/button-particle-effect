@@ -1,12 +1,35 @@
-@import "tailwindcss";
-@import '@mantine/core/styles.layer.css';
+@import 'tailwindcss';
 
-html,
-body {
-  font-size: 16px;
+@theme {
+  --font-sans: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Instrument Serif', ui-serif, Georgia, serif;
+
+  --color-ink: #3b2430;
+  --color-ink-soft: #7d6470;
+  --color-card: rgb(255 255 255 / 0.42);
+  --color-card-line: rgb(255 255 255 / 0.7);
+
+  --color-brick: #b4463c;
+  --color-plum: #5b2a4a;
+  --color-indigo: #4a4fd1;
+  --color-success: #2f9a5b;
+  --color-tangerine: #e2733a;
+  --color-teal: #2b7d78;
+
+  --radius-card: 1.75rem;
 }
 
-@theme static {
-  --color-primary: var(--mantine-color-primary-6);
-  --color-secondary: var(--mantine-color-secondary-6);
+html {
+  background: linear-gradient(118deg, #d5afd0 0%, #e4c4d1 38%, #ecd8d4 66%, #f4e7d6 100%) fixed;
+  color: var(--color-ink);
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.tp-dfwv {
+  z-index: 50;
 }
